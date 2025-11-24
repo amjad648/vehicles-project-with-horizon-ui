@@ -8,18 +8,41 @@ import {
   MdLock,
   MdOutlineShoppingCart,
 } from 'react-icons/md';
-
+import { CopyIcon } from '@chakra-ui/icons';
 // Admin Imports
 import MainDashboard from 'views/admin/default';
 import NFTMarketplace from 'views/admin/marketplace';
 import Profile from 'views/admin/profile';
 import DataTables from 'views/admin/dataTables';
 import RTL from 'views/admin/rtl';
-
+import MiniDashboard from 'views/admin/defaultCopy';
+import VehiclesDataTable from 'views/admin/vehiclesDataTable';
+import InvoicesDataTable from 'views/admin/invoicesDataTable';
 // Auth Imports
 import SignInCentered from 'views/auth/signIn';
 
 const routes = [
+  {
+    name: 'Mini Dashboard',
+    layout: '/admin',
+    icon: <Icon as={MdHome} width="20px" height="20px" color="inherit" />,
+    path: '/mini-dashboard',
+    component: <MiniDashboard />,
+  },
+  {
+    name: 'Vehicles Data',
+    layout: '/admin',
+    icon: <Icon as={MdBarChart} width="20px" height="20px" color="inherit" />,
+    path: '/vehicles-data',
+    component: <VehiclesDataTable />,
+  },
+  {
+    name: 'Invoices Data',
+    layout: '/admin',
+    icon: <Icon as={CopyIcon} width="20px" height="20px" color="inherit" />,
+    path: '/invoices-data',
+    component: <InvoicesDataTable />,
+  },
   {
     name: 'Main Dashboard',
     layout: '/admin',
@@ -27,6 +50,7 @@ const routes = [
     icon: <Icon as={MdHome} width="20px" height="20px" color="inherit" />,
     component: <MainDashboard />,
   },
+  
   {
     name: 'NFT Marketplace',
     layout: '/admin',
@@ -49,6 +73,7 @@ const routes = [
     path: '/data-tables',
     component: <DataTables />,
   },
+  
   {
     name: 'Profile',
     layout: '/admin',
@@ -70,6 +95,7 @@ const routes = [
     icon: <Icon as={MdHome} width="20px" height="20px" color="inherit" />,
     component: <RTL />,
   },
+  
 ];
 
 export default routes;

@@ -163,6 +163,7 @@ export default function Dashboard(props) {
             <Box>
               <Footer />
             </Box>
+      
           </Box>
         </SidebarContext.Provider>
       </Box>
