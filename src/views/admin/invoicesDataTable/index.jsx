@@ -19,44 +19,44 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { getInvoices } from "../../../services/invoiceService";
 import { useKeycloak } from "@react-keycloak/web";
-
+import { useSearchParams } from "react-router-dom";
 // Chakra imports
-import { Box, SimpleGrid } from "@chakra-ui/react";
-import DevelopmentTable from "views/admin/dataTables/components/DevelopmentTable";
-import CheckTable from "views/admin/dataTables/components/CheckTable";
-import ColumnsTable from "views/admin/dataTables/components/ColumnsTable";
+import { Box } from "@chakra-ui/react";
 import ComplexTable from "views/admin/invoicesDataTable/components/ComplexTable";
 import {
-  columnsDataDevelopment,
-  columnsDataCheck,
-  columnsDataColumns,
   columnsDataComplex,
 } from "views/admin/invoicesDataTable/variables/columnsData";
-import tableDataDevelopment from "views/admin/dataTables/variables/tableDataDevelopment.json";
-import tableDataCheck from "views/admin/dataTables/variables/tableDataCheck.json";
-import tableDataColumns from "views/admin/dataTables/variables/tableDataColumns.json";
-import tableDataComplex from "views/admin/dataTables/variables/tableDataComplex.json";
-import React from "react";
 
 export default function Settings() {
   const [invoicesData, setInvoicesData] = useState([]);
   const { keycloak,initialized } = useKeycloak();
-
+  const [searchParams] = useSearchParams();
+ 
   useEffect( () => {
     // wait until Keycloak finishes loaing
  if (!initialized || !keycloak.authenticated) return;
 
   async function fetchInvoices () {
-    const data = await getInvoices();
+    const filters = {};
+    const vehicleId = searchParams.get("vehicleId");
+    const status = searchParams.get('status');
+
+    if (vehicleId) filters.vehicleId = vehicleId;
+   
+    console.log(vehicleId);
+  
+    // Only add status filter if URL has it
+    if (status) filters.statuses = status.toUpperCase();
+    const data = await getInvoices(filters);
     setInvoicesData(data || []);
     };
 
    fetchInvoices();
     
-    }, [initialized]);
+    }, [initialized, keycloak.authenticated, searchParams]);
 
     console.log(invoicesData);
   // Chakra Color Mode
@@ -68,15 +68,6 @@ export default function Settings() {
     spacing={{ base: "20px", xl: "20px" }}
     >
        
-        {/* <DevelopmentTable
-          columnsData={columnsDataDevelopment}
-          tableData={tableDataDevelopment}
-        />
-        <CheckTable columnsData={columnsDataCheck} tableData={tableDataCheck} />
-        <ColumnsTable
-          columnsData={columnsDataColumns}
-          tableData={tableDataColumns}
-        /> */}
         <ComplexTable
           columnsData={columnsDataComplex}
           tableData={invoicesData}
@@ -85,3 +76,25 @@ export default function Settings() {
     </Box>
   );
 }
+
+
+
+
+
+
+
+
+
+
+
+// export function getInvoicesById (id) {
+//   console.log("Fetching invoices for vehicle ID:", id);
+  
+//   return api.get(`${INVOICES_BASE_ENDPOINT}?vehicleId=${id}`).then(response => response.data.content)
+//   .catch((error) => {
+//  console.error('Error to get invoices data by Id:', error);
+//  return [];
+
+//   });
+// };
+

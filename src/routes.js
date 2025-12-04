@@ -26,7 +26,7 @@ const routes = [
     name: 'Mini Dashboard',
     layout: '/admin',
     icon: <Icon as={MdHome} width="20px" height="20px" color="inherit" />,
-    path: '/mini-dashboard',
+    path: '/default',
     component: <MiniDashboard />,
   },
   {
@@ -40,13 +40,14 @@ const routes = [
     name: 'Invoices Data',
     layout: '/admin',
     icon: <Icon as={CopyIcon} width="20px" height="20px" color="inherit" />,
-    path: '/invoices-data',
+    path: '/invoices',
     component: <InvoicesDataTable />,
   },
+  
   {
     name: 'Main Dashboard',
     layout: '/admin',
-    path: '/default',
+    path: '/main-dashboard',
     icon: <Icon as={MdHome} width="20px" height="20px" color="inherit" />,
     component: <MainDashboard />,
   },

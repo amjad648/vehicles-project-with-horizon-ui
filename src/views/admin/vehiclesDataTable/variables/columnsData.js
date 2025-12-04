@@ -58,8 +58,7 @@ export const columnsDataColumns = [
     Header: "REGISTRATION NO.",
     accessor: "registration",
   },
-
-  
+ 
 ];
 
 export const columnsDataComplex = [

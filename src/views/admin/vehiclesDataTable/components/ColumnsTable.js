@@ -9,10 +9,12 @@ import {
   Text,
   Th,
   Thead,
+  Button,
   Tr,
   useColorModeValue,
 } from '@chakra-ui/react';
 import * as React from 'react';
+import { NavLink } from "react-router-dom";
 
 import {
   createColumnHelper,
@@ -132,9 +134,56 @@ export default function ColumnTable(props) {
         </Text>
       ),
     }),
+    {
+      id: "actions",
+      header: () => (
+        <Text
+          justifyContent="space-between"
+          align="center"
+          fontSize={{ sm: "10px", lg: "12px" }}
+          color="gray.400"
+        >
+          ACTIONS
+        </Text>
+      ),
+      cell: (info) => {
+        const row = info.row.original; // full invoice object
+        const id = info.row.original.id;  // <-- get row id here
+        return (
+          <Flex gap="10px">
+            <Button
+              size="sm"
+              variant="brand"
+              onClick={() => console.log("Edit Invoice", row.invoiceId)}
+            >
+              Edit
+            </Button>
+    
+            <Button
+              size="sm"
+              colorScheme="red"
+              onClick={() => console.log("Delete Invoice", row.invoiceId)}
+            >
+              Delete
+            </Button>
+
+            <Button
+              size="sm"
+              variant="brand"
+              as={NavLink}
+              to={`/admin/invoices?vehicleId=${id}`}   // <-- use id here
+            >
+              Invoices
+            </Button>
+          </Flex>
+        );
+      },
+    },
    
   ];
+
   const [data, setData] = React.useState(() => [...defaultData]);
+
   React.useEffect(() => {
     setData(tableData || []);
   }, [tableData]);

@@ -66,6 +66,7 @@ import { ProfileIcon, PlusSquareIcon } from "components/icons/Icons";
 import { DocumentIcon } from "components/icons/Icons";
 import { CreditIcon } from "components/icons/Icons";
 import { StatsIcon } from "components/icons/Icons";
+import { NavLink } from "react-router-dom";
 
 
 export default function UserReports() {
@@ -75,7 +76,7 @@ export default function UserReports() {
   const textColor = useColorModeValue("secondaryGray.900", "white");
 
   const { keycloak,initialized } = useKeycloak();
-  const [dashboardData, setDashboardData] = useState([]);
+  const [dashboardData, setDashboardData] = useState({});
 
   useEffect( () => {
     // wait until Keycloak finishes loading
@@ -83,19 +84,19 @@ export default function UserReports() {
 
    async function getDashboardData () {
     const data = await fetchDashboardAnalytics();
-    setDashboardData(data || []);
+    setDashboardData(data || {});
     };
 
    getDashboardData();
 
-    }, [initialized]);
+    }, [initialized, keycloak.authenticated]);
 
     console.log(dashboardData);
 
-   const approvedInvoices = dashboardData?.invoiceCountsByStatus?.APPROVED;
-   const pendingInvoices = dashboardData?.invoiceCountsByStatus?.PENDING;
-   const rejectedInvoices = dashboardData?.invoiceCountsByStatus?.REJECTED;
-   const draftInvoices = dashboardData?.invoiceCountsByStatus?.DRAFT;
+   const approvedInvoices = dashboardData?.invoiceCountsByStatus?.APPROVED || 0;
+   const pendingInvoices = dashboardData?.invoiceCountsByStatus?.PENDING || 0;
+   const rejectedInvoices = dashboardData?.invoiceCountsByStatus?.REJECTED || 0;
+   const draftInvoices = dashboardData?.invoiceCountsByStatus?.DRAFT || 0;
 
   return (
     <Box pt={{ base: "130px", md: "80px", xl: "80px" }} mt='25px'>
@@ -104,7 +105,16 @@ export default function UserReports() {
         columns={{ base: 1, md: 2, xl: 3,  }}
         gap='30px'
         mb='5px'>
-        <MiniStatistics
+      <Box 
+    as={NavLink}
+    to="/admin/vehicles-data"
+    w="100%"
+    borderRadius="16px"
+    border="1px solid"
+    borderColor="gray.200"
+    _hover={{ bg: "gray.100", cursor: "pointer" }}
+    >
+      <MiniStatistics
           startContent={
             <IconBox
               w='56px'
@@ -118,6 +128,8 @@ export default function UserReports() {
           name='Total Vehicles'
           value={dashboardData.totalVehicles}
         />
+         </Box>
+       
         <MiniStatistics
           startContent={
             <IconBox
@@ -132,6 +144,15 @@ export default function UserReports() {
           name='Total Users'
           value={dashboardData.totalUsers}
         />
+         <Box 
+    as={NavLink}
+    to="/admin/invoices"
+    w="100%"
+    borderRadius="16px"
+    border="1px solid"
+    borderColor="gray.200"
+    _hover={{ bg: "gray.100", cursor: "pointer" }}
+       >
           <MiniStatistics
           startContent={
             <IconBox
@@ -145,15 +166,26 @@ export default function UserReports() {
           name='Total Invoices'
           value={dashboardData.totalInvoices}
         />
+        </Box>
         </SimpleGrid>
      
       <Box pt={{ base: "130px", md: "80px", xl: "80px" }}>
       <Text color={textColor} fontSize='md' fontWeight='600' ms='15px'>
           INVOICE STATUS
         </Text>
+
       <SimpleGrid columns={{ base: 1, md: 2, xl: 3 }} gap='30px' mb='20px'>
       
     
+      <Box 
+    as={NavLink}
+    to="/admin/invoices?status=approved"
+    w="100%"
+    borderRadius="16px"
+    border="1px solid"
+    borderColor="gray.200"
+    _hover={{ bg: "gray.100", cursor: "pointer" }}
+       >
          <MiniStatistics
           startContent={
             <IconBox
@@ -166,6 +198,16 @@ export default function UserReports() {
           name='Approved Invoices'
           value={approvedInvoices}
         />
+        </Box>
+        <Box 
+    as={NavLink}
+    to="/admin/invoices?status=pending"
+    w="100%"
+    borderRadius="16px"
+    border="1px solid"
+    borderColor="gray.200"
+    _hover={{ bg: "gray.100", cursor: "pointer" }}
+       >
         <MiniStatistics
           startContent={
             <IconBox
@@ -180,6 +222,16 @@ export default function UserReports() {
           name='Pending Invoices'
           value={pendingInvoices}
         />
+        </Box>
+        <Box 
+    as={NavLink}
+    to="/admin/invoices?status=draft"
+    w="100%"
+    borderRadius="16px"
+    border="1px solid"
+    borderColor="gray.200"
+    _hover={{ bg: "gray.100", cursor: "pointer" }}
+       >
          <MiniStatistics
           startContent={
             <IconBox
@@ -194,7 +246,17 @@ export default function UserReports() {
           name='Draft Invoices'
           value={draftInvoices}
         />
+       </Box>
        
+       <Box 
+    as={NavLink}
+    to="/admin/invoices?status=rejected"
+    w="100%"
+    borderRadius="16px"
+    border="1px solid"
+    borderColor="gray.200"
+    _hover={{ bg: "gray.100", cursor: "pointer" }}
+       >
         <MiniStatistics
           startContent={
             <IconBox
@@ -209,6 +271,8 @@ export default function UserReports() {
           name='Rejected Invoices'
           value={rejectedInvoices}
         />
+        </Box>
+
       </SimpleGrid>
       </Box>
     </Box>

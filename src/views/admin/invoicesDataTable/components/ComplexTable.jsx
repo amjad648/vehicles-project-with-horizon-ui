@@ -1,5 +1,6 @@
 /* eslint-disable */
 
+
 import {
   Box,
   Flex,
@@ -12,7 +13,16 @@ import {
   Th,
   Thead,
   Tr,
+  Button,
   useColorModeValue,
+  useDisclosure,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalCloseButton,
+  ModalBody,
+  ModalFooter,
 } from '@chakra-ui/react';
 import {
   createColumnHelper,
@@ -27,18 +37,43 @@ import Menu from 'components/menu/MainMenu';
 import * as React from 'react';
 // Assets
 import { MdCancel, MdCheckCircle, MdOutlineError } from 'react-icons/md';
-
+import { getInvoiceById } from "../../../../services/invoiceService.js";
+import { Spinner } from "@chakra-ui/react";
+import InvoiceModal from "./InvoiceModal.jsx"
 const columnHelper = createColumnHelper();
 
-// const columns = columnsDataCheck;
 export default function ComplexTable(props) {
+const { isOpen, onOpen, onClose } = useDisclosure();
+const [selectedInvoice, setSelectedInvoice] = React.useState(null);
+const [loadingInvoice, setLoadingInvoice] = React.useState(false);
+const [error, setError] = React.useState(false);   
+
+const openInvoiceModal = async (invoiceId) => {
+  try {
+    setError(false);                // reset error
+    setSelectedInvoice(null);      // Reset so old invoice doesn't show
+    setLoadingInvoice(true);      // show spinner
+    onOpen();                     // open modal immediately
+
+    const invoiceData = await getInvoiceById(invoiceId);
+    setSelectedInvoice(invoiceData);   // save fresh invoice
+    
+  } catch (err) {
+    console.error("Failed to fetch invoice:", err);
+    setError(true);               // show error message in modal
+    setSelectedInvoice(null);     // prevent showing old invoice
+  } finally {
+    setLoadingInvoice(false);     // hide spinner after fetch
+  }
+};
+
   const { tableData } = props;
   const [sorting, setSorting] = React.useState([]);
   const textColor = useColorModeValue('secondaryGray.900', 'white');
   const borderColor = useColorModeValue('gray.200', 'whiteAlpha.100');
   let defaultData = tableData;
   const columns = [
-    columnHelper.accessor('invoiceId', {
+     columnHelper.accessor('invoiceId', {
       id: 'invoiceId',
       header: () => (
         <Text
@@ -50,13 +85,25 @@ export default function ComplexTable(props) {
           INVOICE ID
         </Text>
       ),
-      cell: (info) => (
-        <Flex align="center">
-          <Text color={textColor} fontSize="sm" fontWeight="700">
-            {info.getValue()}
+      cell: (info) => {
+        // const row = info.row.original; // full invoice object
+        const invoiceId = info.getValue();
+        return(
+        <Flex 
+        align="center"
+        cursor="pointer"
+        onClick={() => openInvoiceModal(invoiceId)}
+        >
+          <Text color={textColor} 
+          fontSize="sm" 
+          fontWeight="700"
+          _hover={{ textDecoration: "underline" }}
+          >
+            {invoiceId}
           </Text>
         </Flex>
-      ),
+        );
+      },
     }),
     columnHelper.accessor('vehicleDisplayName', {
       id: 'vehicleDisplayName',
@@ -199,6 +246,43 @@ export default function ComplexTable(props) {
         </Flex>
       ),
     }),
+    {
+      id: "actions",
+      header: () => (
+        <Text
+          justifyContent="space-between"
+          align="center"
+          fontSize={{ sm: "10px", lg: "12px" }}
+          color="gray.400"
+        >
+          ACTIONS
+        </Text>
+      ),
+      cell: (info) => {
+        const row = info.row.original; // full invoice object
+        return (
+          <Flex gap="10px">
+            <Button
+              size="sm"
+              variant="brand"
+              onClick={() => console.log("Edit Invoice", row.invoiceId)}
+            >
+              Edit
+            </Button>
+    
+            <Button
+              size="sm"
+              colorScheme="red"
+              onClick={() => console.log("Delete Invoice", row.invoiceId)}
+            >
+              Delete
+            </Button>
+          </Flex>
+        );
+      },
+    }
+    
+
   ];
   const [data, setData] = React.useState(() => [...defaultData]);
   React.useEffect(() => {
@@ -216,6 +300,7 @@ export default function ComplexTable(props) {
     debugTable: true,
   });
   return (
+    <>
     <Card
       flexDirection="column"
       w="100%"
@@ -298,5 +383,16 @@ export default function ComplexTable(props) {
         </Table>
       </Box>
     </Card>
+
+    <InvoiceModal
+  isOpen={isOpen}
+  onClose={onClose}
+  invoice={selectedInvoice}
+  loading={loadingInvoice}
+  error={error}  
+/>
+
+</>
+
   );
 }

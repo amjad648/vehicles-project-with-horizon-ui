@@ -58,7 +58,7 @@ export default function Settings() {
 }, []);
 
  console.log(vehiclesData);
- 
+
   // Chakra Color Mode
   return (
     <Box pt={{ base: "150px", md: "80px", xl: "80px" }}

@@ -10,6 +10,7 @@ import {
 } from '@chakra-ui/react';
 import initialTheme from './theme/theme'; //  { themeGreen }
 import { useState } from 'react';
+import routes from './routes';  
 // Chakra imports
 
 export default function Main() {
@@ -19,12 +20,23 @@ export default function Main() {
     <ChakraProvider theme={currentTheme}>
       <Routes>
         <Route path="auth/*" element={<AuthLayout />} />
-        <Route
+         {/* ADMIN ROUTES (PARENT) */}
+         <Route
           path="admin/*"
-          element={
-            <AdminLayout theme={currentTheme} setTheme={setCurrentTheme} />
+          element={<AdminLayout theme={currentTheme} setTheme={setCurrentTheme} />}
+        >
+          {/* CHILD ROUTES */}
+          {routes
+            .filter(route => route.layout === "/admin")
+            .map((route, index) => (
+              <Route
+                key={index}
+                path={route.path.replace("/", "")}  // removes leading slash
+                element={route.component}
+              />
+            ))
           }
-        />
+        </Route>
         <Route
           path="rtl/*"
           element={
