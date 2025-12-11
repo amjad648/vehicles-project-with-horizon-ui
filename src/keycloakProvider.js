@@ -1,6 +1,3 @@
-
-
-
 import React, { useState, useEffect, createContext } from 'react';
 import keycloak from './keycloak';
 

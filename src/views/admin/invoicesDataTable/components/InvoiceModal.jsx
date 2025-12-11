@@ -17,7 +17,6 @@ import {
   VStack,
   SimpleGrid,
 } from "@chakra-ui/react";
-import { conversion } from "common/conversionFunction";
 export default function InvoiceDetailsModal({
   isOpen,
   onClose,
@@ -103,7 +102,7 @@ export default function InvoiceDetailsModal({
               Total Cost
             </Text>
             <Text fontSize="2xl" color="blue.600" fontWeight="700">
-              Rs. {conversion(invoice.totalCost)}
+              Rs. {invoice.totalCost}
             </Text>
           </Box>
         </Flex>
@@ -166,7 +165,7 @@ export default function InvoiceDetailsModal({
                   </Box>
 
                   <Text fontWeight="700" color="blue.600">
-                    Rs. {conversion(task.cost)}
+                    Rs. {task.cost}
                   </Text>
                 </Flex>
               ))
@@ -200,7 +199,7 @@ export default function InvoiceDetailsModal({
                   </Box>
 
                   <Text fontWeight="700" color="blue.600">
-                    Rs. {conversion(task.cost)}
+                    Rs. {task.cost}
                   </Text>
                 </Flex>
               ))
