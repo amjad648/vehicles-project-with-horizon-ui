@@ -1,11 +1,8 @@
 /* eslint-disable */
-
-
 import {
   Box,
   Flex,
   Icon,
-  Progress,
   Table,
   Tbody,
   Td,
@@ -16,13 +13,6 @@ import {
   Button,
   useColorModeValue,
   useDisclosure,
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalCloseButton,
-  ModalBody,
-  ModalFooter,
 } from '@chakra-ui/react';
 import {
   createColumnHelper,
@@ -37,8 +27,7 @@ import Menu from 'components/menu/MainMenu';
 import * as React from 'react';
 // Assets
 import { MdCancel, MdCheckCircle, MdOutlineError } from 'react-icons/md';
-import { getInvoiceById } from "../../../../services/invoiceService.js";
-import { Spinner } from "@chakra-ui/react";
+import { getInvoiceByInvoiceId } from "../../../../services/invoiceService.js";
 import InvoiceModal from "./InvoiceModal.jsx"
 const columnHelper = createColumnHelper();
 
@@ -55,7 +44,7 @@ const openInvoiceModal = async (invoiceId) => {
     setLoadingInvoice(true);      // show spinner
     onOpen();                     // open modal immediately
 
-    const invoiceData = await getInvoiceById(invoiceId);
+    const invoiceData = await getInvoiceByInvoiceId(invoiceId);
     setSelectedInvoice(invoiceData);   // save fresh invoice
     
   } catch (err) {

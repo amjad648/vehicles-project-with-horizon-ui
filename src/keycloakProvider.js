@@ -1,3 +1,6 @@
+
+
+
 import React, { useState, useEffect, createContext } from 'react';
 import keycloak from './keycloak';
 
@@ -8,7 +11,10 @@ const KeycloakProvider = ({ children }) => {
 
   useEffect(() => {
     keycloak
-      .init({ onLoad: 'login-required', checkLoginIframe: false })
+      .init({ 
+        onLoad: 'login-required',
+        checkLoginIframe: false,
+      })
       .then(authenticated => {
         if (!authenticated) {
           keycloak.login();
@@ -17,7 +23,7 @@ const KeycloakProvider = ({ children }) => {
         }
         
       })
-      .catch(error => console.error('Keycloak init error:', error));
+      .catch(error => console.error('Keycloak initialization error:', error));
   }, []);
 
   if (!keycloakReady) {

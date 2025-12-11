@@ -1,5 +1,4 @@
 
-
 import {
   Modal,
   ModalOverlay,
@@ -17,9 +16,8 @@ import {
   Badge,
   VStack,
   SimpleGrid,
-  HStack
 } from "@chakra-ui/react";
-
+import { conversion } from "common/conversionFunction";
 export default function InvoiceDetailsModal({
   isOpen,
   onClose,
@@ -47,10 +45,10 @@ export default function InvoiceDetailsModal({
         Invoice not found or server error.
       </Text>
    ) : invoice ? (
-    <VStack align="stretch" spacing="6">
+     <VStack align="stretch" spacing="6">
       {/* =======================================================
           SECTION 1: INVOICE SUMMARY
-      ======================================================== */}
+          ======================================================== */}
       <Box
         p="5"
         bg="gray.50"
@@ -58,9 +56,10 @@ export default function InvoiceDetailsModal({
         border="1px solid"
         borderColor="gray.200"
         boxShadow="sm"
-      >
+        >
         <Flex justify="space-between" align="center">
           <Box>
+          {console.log(invoice)}
             <Text fontSize="lg" fontWeight="700" color="gray.700">
               Invoice ID
             </Text>
@@ -104,7 +103,7 @@ export default function InvoiceDetailsModal({
               Total Cost
             </Text>
             <Text fontSize="2xl" color="blue.600" fontWeight="700">
-              Rs. {invoice.totalCost}
+              Rs. {conversion(invoice.totalCost)}
             </Text>
           </Box>
         </Flex>
@@ -167,7 +166,7 @@ export default function InvoiceDetailsModal({
                   </Box>
 
                   <Text fontWeight="700" color="blue.600">
-                    Rs. {task.cost}
+                    Rs. {conversion(task.cost)}
                   </Text>
                 </Flex>
               ))
@@ -201,7 +200,7 @@ export default function InvoiceDetailsModal({
                   </Box>
 
                   <Text fontWeight="700" color="blue.600">
-                    Rs. {task.cost}
+                    Rs. {conversion(task.cost)}
                   </Text>
                 </Flex>
               ))

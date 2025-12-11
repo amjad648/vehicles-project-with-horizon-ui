@@ -21,32 +21,23 @@
 */
 
 // Chakra imports
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { fetchVehicles } from "../../../services/vehicleService";
-import { useKeycloak } from "@react-keycloak/web";
-import { Box, SimpleGrid } from "@chakra-ui/react";
-import DevelopmentTable from "views/admin/dataTables/components/DevelopmentTable";
-import CheckTable from "views/admin/dataTables/components/CheckTable";
+import { KeycloakContext } from "../../../keycloakProvider";
+import { Box } from "@chakra-ui/react";
 import ColumnsTable from "./components/ColumnsTable";
-import ComplexTable from "views/admin/dataTables/components/ComplexTable";
+
 import {
-  columnsDataDevelopment,
-  columnsDataCheck,
   columnsDataColumns,
-  columnsDataComplex,
 } from "./variables/columnsData";
-import tableDataDevelopment from "views/admin/dataTables/variables/tableDataDevelopment.json";
-import tableDataCheck from "views/admin/dataTables/variables/tableDataCheck.json";
-import tableDataColumns from "./variables/tableDataColumns.json";
-import tableDataComplex from "views/admin/dataTables/variables/tableDataComplex.json";
 import React from "react";
 
 export default function Settings() {
   const [vehiclesData, setVehiclesData] = useState([]);
-  const { keycloak,initialized } = useKeycloak();
+  const keycloak = useContext(KeycloakContext);
 
   useEffect( () => {
-    if (!initialized || !keycloak.authenticated) return;
+    if (!keycloak || !keycloak.authenticated) return;
 
     async function getVehiclesData () {
      const data = await fetchVehicles();
@@ -73,16 +64,6 @@ export default function Settings() {
           columnsData={columnsDataColumns}
           tableData={vehiclesData}
        />
-        {/* <DevelopmentTable
-          columnsData={columnsDataDevelopment}
-          tableData={tableDataDevelopment}
-        />
-        <CheckTable columnsData={columnsDataCheck} tableData={tableDataCheck} />
-       
-        <ComplexTable
-          columnsData={columnsDataComplex}
-          tableData={tableDataComplex}
-        /> */}
       
     </Box>
   );

@@ -22,260 +22,464 @@
 
 // Chakra imports
 import {
-  Avatar,
   Text,
   Box,
-  Flex,
-  FormLabel,
   Icon,
-  Select,
   SimpleGrid,
   useColorModeValue,
 } from "@chakra-ui/react";
-// Assets
-import Usa from "assets/img/dashboards/usa.png";
-// Custom components
-import MiniCalendar from "components/calendar/MiniCalendar";
+
 import MiniStatistics from "components/card/MiniStatistics";
 import IconBox from "components/icons/IconBox";
 import { DeleteIcon } from "@chakra-ui/icons";
-import React from "react";
-import {
-  MdAddTask,
-  MdAttachMoney,
-  MdBarChart,
-  MdFileCopy,
-} from "react-icons/md";
-import {useState, useEffect} from 'react';
-import { useKeycloak } from "@react-keycloak/web";
-import { fetchDashboardAnalytics } from "services/dashboardServices.js";
-import CheckTable from "views/admin/default/components/CheckTable";
-import ComplexTable from "views/admin/default/components/ComplexTable";
-import DailyTraffic from "views/admin/default/components/DailyTraffic";
-import PieCard from "views/admin/default/components/PieCard";
-import Tasks from "views/admin/default/components/Tasks";
-import TotalSpent from "views/admin/default/components/TotalSpent";
-import WeeklyRevenue from "views/admin/default/components/WeeklyRevenue";
-import {
-  columnsDataCheck,
-  columnsDataComplex,
-} from "views/admin/default/variables/columnsData";
-import tableDataCheck from "views/admin/default/variables/tableDataCheck.json";
-import tableDataComplex from "views/admin/default/variables/tableDataComplex.json";
-import { ProfileIcon, PlusSquareIcon } from "components/icons/Icons";
-import { DocumentIcon } from "components/icons/Icons";
-import { CreditIcon } from "components/icons/Icons";
-import { StatsIcon } from "components/icons/Icons";
-import { NavLink } from "react-router-dom";
 
+import React, { useState, useEffect, useContext } from "react";
+import { fetchDashboardAnalytics } from "services/dashboardServices.js";
+import { ProfileIcon, CreditIcon, StatsIcon } from "components/icons/Icons";
+import { NavLink } from "react-router-dom";
+import {
+     MdAddTask,
+     MdFileCopy,
+    } from "react-icons/md";
+// ⬅️ ADD THIS
+import { KeycloakContext } from "../../../keycloakProvider";
 
 export default function UserReports() {
-  // Chakra Color Mode
   const brandColor = useColorModeValue("brand.500", "white");
   const boxBg = useColorModeValue("secondaryGray.300", "whiteAlpha.100");
   const textColor = useColorModeValue("secondaryGray.900", "white");
 
-  const { keycloak,initialized } = useKeycloak();
+  // ⬅️ REPLACE useKeycloak WITH THIS
+  const keycloak = useContext(KeycloakContext);
+
   const [dashboardData, setDashboardData] = useState({});
 
-  useEffect( () => {
-    // wait until Keycloak finishes loading
-  if (!initialized || !keycloak.authenticated) return;
+  useEffect(() => {
+    if (!keycloak || !keycloak.authenticated) return;
 
-   async function getDashboardData () {
-    const data = await fetchDashboardAnalytics();
-    setDashboardData(data || {});
-    };
+    async function loadData() {
+      const data = await fetchDashboardAnalytics();
+      setDashboardData(data || {});
+    }
 
-   getDashboardData();
+    loadData();
+  }, [keycloak?.authenticated]);
 
-    }, [initialized, keycloak.authenticated]);
-
-    console.log(dashboardData);
-
-   const approvedInvoices = dashboardData?.invoiceCountsByStatus?.APPROVED || 0;
-   const pendingInvoices = dashboardData?.invoiceCountsByStatus?.PENDING || 0;
-   const rejectedInvoices = dashboardData?.invoiceCountsByStatus?.REJECTED || 0;
-   const draftInvoices = dashboardData?.invoiceCountsByStatus?.DRAFT || 0;
+  const approvedInvoices = dashboardData?.invoiceCountsByStatus?.APPROVED || 0;
+  const pendingInvoices = dashboardData?.invoiceCountsByStatus?.PENDING || 0;
+  const rejectedInvoices = dashboardData?.invoiceCountsByStatus?.REJECTED || 0;
+  const draftInvoices = dashboardData?.invoiceCountsByStatus?.DRAFT || 0;
 
   return (
-    <Box pt={{ base: "130px", md: "80px", xl: "80px" }} mt='25px'>
-      
-      <SimpleGrid
-        columns={{ base: 1, md: 2, xl: 3,  }}
-        gap='30px'
-        mb='5px'>
-      <Box 
-    as={NavLink}
-    to="/admin/vehicles-data"
-    w="100%"
-    borderRadius="16px"
-    border="1px solid"
-    borderColor="gray.200"
-    _hover={{ bg: "gray.100", cursor: "pointer" }}
-    >
-      <MiniStatistics
-          startContent={
-            <IconBox
-              w='56px'
-              h='56px'
-              bg={boxBg}
-              icon={
-                <Icon w='32px' h='32px' as={StatsIcon} color={brandColor} />
-              }
-            />
-          }
-          name='Total Vehicles'
-          value={dashboardData.totalVehicles}
-        />
-         </Box>
-       
+    <Box pt={{ base: "130px", md: "80px", xl: "80px" }} mt="25px">
+      <SimpleGrid columns={{ base: 1, md: 2, xl: 3 }} gap="30px" mb="5px">
+        <Box
+          as={NavLink}
+          to="/admin/vehicles-data"
+          w="100%"
+          borderRadius="16px"
+          border="1px solid"
+          borderColor="gray.200"
+          _hover={{ bg: "gray.100", cursor: "pointer" }}
+        >
+          <MiniStatistics
+            startContent={
+              <IconBox
+                w="56px"
+                h="56px"
+                bg={boxBg}
+                icon={
+                  <Icon w="32px" h="32px" as={StatsIcon} color={brandColor} />
+                }
+              />
+            }
+            name="Total Vehicles"
+            value={dashboardData.totalVehicles}
+          />
+        </Box>
+
         <MiniStatistics
           startContent={
             <IconBox
-              w='56px'
-              h='56px'
+              w="56px"
+              h="56px"
               bg={boxBg}
               icon={
-                <Icon w='32px' h='32px' as={ProfileIcon} color={brandColor} />
+                <Icon w="32px" h="32px" as={ProfileIcon} color={brandColor} />
               }
             />
           }
-          name='Total Users'
+          name="Total Users"
           value={dashboardData.totalUsers}
         />
-         <Box 
-    as={NavLink}
-    to="/admin/invoices"
-    w="100%"
-    borderRadius="16px"
-    border="1px solid"
-    borderColor="gray.200"
-    _hover={{ bg: "gray.100", cursor: "pointer" }}
-       >
+
+        <Box
+          as={NavLink}
+          to="/admin/invoices"
+          w="100%"
+          borderRadius="16px"
+          border="1px solid"
+          borderColor="gray.200"
+          _hover={{ bg: "gray.100", cursor: "pointer" }}
+        >
           <MiniStatistics
-          startContent={
-            <IconBox
-              w='56px'
-              h='56px'
-              bg={boxBg}
-              icon={
-                <Icon w='32px' h='32px' as={CreditIcon} color={brandColor} />}
-            />
-          }
-          name='Total Invoices'
-          value={dashboardData.totalInvoices}
-        />
+            startContent={
+              <IconBox
+                w="56px"
+                h="56px"
+                bg={boxBg}
+                icon={
+                  <Icon w="32px" h="32px" as={CreditIcon} color={brandColor} />
+                }
+              />
+            }
+            name="Total Invoices"
+            value={dashboardData.totalInvoices}
+          />
         </Box>
-        </SimpleGrid>
-     
+      </SimpleGrid>
+
+      {/* INVOICE STATUS */}
       <Box pt={{ base: "130px", md: "80px", xl: "80px" }}>
-      <Text color={textColor} fontSize='md' fontWeight='600' ms='15px'>
+        <Text color={textColor} fontSize="md" fontWeight="600" ms="15px">
           INVOICE STATUS
         </Text>
 
-      <SimpleGrid columns={{ base: 1, md: 2, xl: 3 }} gap='30px' mb='20px'>
-      
-    
-      <Box 
-    as={NavLink}
-    to="/admin/invoices?status=approved"
-    w="100%"
-    borderRadius="16px"
-    border="1px solid"
-    borderColor="gray.200"
-    _hover={{ bg: "gray.100", cursor: "pointer" }}
-       >
-         <MiniStatistics
-          startContent={
-            <IconBox
-              w='56px'
-              h='56px'
-              bg={boxBg}
-              icon={<Icon w='28px' h='28px' as={MdAddTask} color={brandColor}/>}
-            />
-          }
-          name='Approved Invoices'
-          value={approvedInvoices}
-        />
-        </Box>
-        <Box 
-    as={NavLink}
-    to="/admin/invoices?status=pending"
-    w="100%"
-    borderRadius="16px"
-    border="1px solid"
-    borderColor="gray.200"
-    _hover={{ bg: "gray.100", cursor: "pointer" }}
-       >
-        <MiniStatistics
-          startContent={
-            <IconBox
-              w='56px'
-              h='56px'
-              bg={boxBg}
-              icon={
-                <Icon w='32px' h='32px' as={MdFileCopy} color={brandColor} />
+        <SimpleGrid columns={{ base: 1, md: 2, xl: 3 }} gap="30px" mb="20px">
+          {/* APPROVED */}
+          <Box
+            as={NavLink}
+            to="/admin/invoices?status=approved"
+            w="100%"
+            borderRadius="16px"
+            border="1px solid"
+            borderColor="gray.200"
+            _hover={{ bg: "gray.100", cursor: "pointer" }}
+          >
+            <MiniStatistics
+              startContent={
+                <IconBox
+                  w="56px"
+                  h="56px"
+                  bg={boxBg}
+                  icon={<Icon w="28px" h="28px" as={MdAddTask} color={brandColor} />}
+                />
               }
+              name="Approved Invoices"
+              value={approvedInvoices}
             />
-          }
-          name='Pending Invoices'
-          value={pendingInvoices}
-        />
-        </Box>
-        <Box 
-    as={NavLink}
-    to="/admin/invoices?status=draft"
-    w="100%"
-    borderRadius="16px"
-    border="1px solid"
-    borderColor="gray.200"
-    _hover={{ bg: "gray.100", cursor: "pointer" }}
-       >
-         <MiniStatistics
-          startContent={
-            <IconBox
-              w='56px'
-              h='56px'
-              bg={boxBg}
-              icon={
-                <Icon w='32px' h='32px' as={MdFileCopy} color={brandColor} />
-              }
-            />
-          }
-          name='Draft Invoices'
-          value={draftInvoices}
-        />
-       </Box>
-       
-       <Box 
-    as={NavLink}
-    to="/admin/invoices?status=rejected"
-    w="100%"
-    borderRadius="16px"
-    border="1px solid"
-    borderColor="gray.200"
-    _hover={{ bg: "gray.100", cursor: "pointer" }}
-       >
-        <MiniStatistics
-          startContent={
-            <IconBox
-              w='56px'
-              h='56px'
-              bg={boxBg}
-              icon={
-                <Icon w='30px' h='30px' as={DeleteIcon} color={brandColor} />
-              }
-            />
-          }
-          name='Rejected Invoices'
-          value={rejectedInvoices}
-        />
-        </Box>
+          </Box>
 
-      </SimpleGrid>
+          {/* PENDING */}
+          <Box
+            as={NavLink}
+            to="/admin/invoices?status=pending"
+            w="100%"
+            borderRadius="16px"
+            border="1px solid"
+            borderColor="gray.200"
+            _hover={{ bg: "gray.100", cursor: "pointer" }}
+          >
+            <MiniStatistics
+              startContent={
+                <IconBox
+                  w="56px"
+                  h="56px"
+                  bg={boxBg}
+                  icon={<Icon w="32px" h="32px" as={MdFileCopy} color={brandColor} />}
+                />
+              }
+              name="Pending Invoices"
+              value={pendingInvoices}
+            />
+          </Box>
+
+          {/* DRAFT */}
+          <Box
+            as={NavLink}
+            to="/admin/invoices?status=draft"
+            w="100%"
+            borderRadius="16px"
+            border="1px solid"
+            borderColor="gray.200"
+            _hover={{ bg: "gray.100", cursor: "pointer" }}
+          >
+            <MiniStatistics
+              startContent={
+                <IconBox
+                  w="56px"
+                  h="56px"
+                  bg={boxBg}
+                  icon={<Icon w="32px" h="32px" as={MdFileCopy} color={brandColor} />}
+                />
+              }
+              name="Draft Invoices"
+              value={draftInvoices}
+            />
+          </Box>
+
+          {/* REJECTED */}
+          <Box
+            as={NavLink}
+            to="/admin/invoices?status=rejected"
+            w="100%"
+            borderRadius="16px"
+            border="1px solid"
+            borderColor="gray.200"
+            _hover={{ bg: "gray.100", cursor: "pointer" }}
+          >
+            <MiniStatistics
+              startContent={
+                <IconBox
+                  w="56px"
+                  h="56px"
+                  bg={boxBg}
+                  icon={<Icon w="30px" h="30px" as={DeleteIcon} color={brandColor} />}
+                />
+              }
+              name="Rejected Invoices"
+              value={rejectedInvoices}
+            />
+          </Box>
+        </SimpleGrid>
       </Box>
     </Box>
-     
   );
 }
+
+// // Chakra imports
+// import {
+//   Text,
+//   Box,
+//   Icon,
+//   SimpleGrid,
+//   useColorModeValue,
+// } from "@chakra-ui/react";
+// // Assets
+// import MiniStatistics from "components/card/MiniStatistics";
+// import IconBox from "components/icons/IconBox";
+// import { DeleteIcon } from "@chakra-ui/icons";
+// import React from "react";
+// import {
+//   MdAddTask,
+//   MdFileCopy,
+// } from "react-icons/md";
+// import {useState, useEffect} from 'react';
+// import { useKeycloak } from "@react-keycloak/web";
+// import { fetchDashboardAnalytics } from "services/dashboardServices.js";
+// import { ProfileIcon } from "components/icons/Icons";
+// import { CreditIcon } from "components/icons/Icons";
+// import { StatsIcon } from "components/icons/Icons";
+// import { NavLink } from "react-router-dom";
+
+
+// export default function UserReports() {
+//   // Chakra Color Mode
+//   const brandColor = useColorModeValue("brand.500", "white");
+//   const boxBg = useColorModeValue("secondaryGray.300", "whiteAlpha.100");
+//   const textColor = useColorModeValue("secondaryGray.900", "white");
+
+//   const { keycloak,initialized } = useKeycloak();
+//   const [dashboardData, setDashboardData] = useState({});
+
+//   useEffect( () => {
+//     // wait until Keycloak finishes loading
+//   if (!initialized || !keycloak.authenticated) return;
+
+//    async function getDashboardData () {
+//     const data = await fetchDashboardAnalytics();
+//     setDashboardData(data || {});
+//     };
+
+//    getDashboardData();
+
+//     }, [initialized, keycloak.authenticated]);
+
+//     console.log(dashboardData);
+
+//    const approvedInvoices = dashboardData?.invoiceCountsByStatus?.APPROVED || 0;
+//    const pendingInvoices = dashboardData?.invoiceCountsByStatus?.PENDING || 0;
+//    const rejectedInvoices = dashboardData?.invoiceCountsByStatus?.REJECTED || 0;
+//    const draftInvoices = dashboardData?.invoiceCountsByStatus?.DRAFT || 0;
+
+//   return (
+//     <Box pt={{ base: "130px", md: "80px", xl: "80px" }} mt='25px'>
+      
+//       <SimpleGrid
+//         columns={{ base: 1, md: 2, xl: 3,  }}
+//         gap='30px'
+//         mb='5px'>
+//       <Box 
+//     as={NavLink}
+//     to="/admin/vehicles-data"
+//     w="100%"
+//     borderRadius="16px"
+//     border="1px solid"
+//     borderColor="gray.200"
+//     _hover={{ bg: "gray.100", cursor: "pointer" }}
+//     >
+//       <MiniStatistics
+//           startContent={
+//             <IconBox
+//               w='56px'
+//               h='56px'
+//               bg={boxBg}
+//               icon={
+//                 <Icon w='32px' h='32px' as={StatsIcon} color={brandColor} />
+//               }
+//             />
+//           }
+//           name='Total Vehicles'
+//           value={dashboardData.totalVehicles}
+//         />
+//          </Box>
+       
+//         <MiniStatistics
+//           startContent={
+//             <IconBox
+//               w='56px'
+//               h='56px'
+//               bg={boxBg}
+//               icon={
+//                 <Icon w='32px' h='32px' as={ProfileIcon} color={brandColor} />
+//               }
+//             />
+//           }
+//           name='Total Users'
+//           value={dashboardData.totalUsers}
+//         />
+//          <Box 
+//     as={NavLink}
+//     to="/admin/invoices"
+//     w="100%"
+//     borderRadius="16px"
+//     border="1px solid"
+//     borderColor="gray.200"
+//     _hover={{ bg: "gray.100", cursor: "pointer" }}
+//        >
+//           <MiniStatistics
+//           startContent={
+//             <IconBox
+//               w='56px'
+//               h='56px'
+//               bg={boxBg}
+//               icon={
+//                 <Icon w='32px' h='32px' as={CreditIcon} color={brandColor} />}
+//             />
+//           }
+//           name='Total Invoices'
+//           value={dashboardData.totalInvoices}
+//         />
+//         </Box>
+//         </SimpleGrid>
+     
+//       <Box pt={{ base: "130px", md: "80px", xl: "80px" }}>
+//       <Text color={textColor} fontSize='md' fontWeight='600' ms='15px'>
+//           INVOICE STATUS
+//         </Text>
+
+//       <SimpleGrid columns={{ base: 1, md: 2, xl: 3 }} gap='30px' mb='20px'>
+      
+    
+//       <Box 
+//     as={NavLink}
+//     to="/admin/invoices?status=approved"
+//     w="100%"
+//     borderRadius="16px"
+//     border="1px solid"
+//     borderColor="gray.200"
+//     _hover={{ bg: "gray.100", cursor: "pointer" }}
+//        >
+//          <MiniStatistics
+//           startContent={
+//             <IconBox
+//               w='56px'
+//               h='56px'
+//               bg={boxBg}
+//               icon={<Icon w='28px' h='28px' as={MdAddTask} color={brandColor}/>}
+//             />
+//           }
+//           name='Approved Invoices'
+//           value={approvedInvoices}
+//         />
+//         </Box>
+//         <Box 
+//     as={NavLink}
+//     to="/admin/invoices?status=pending"
+//     w="100%"
+//     borderRadius="16px"
+//     border="1px solid"
+//     borderColor="gray.200"
+//     _hover={{ bg: "gray.100", cursor: "pointer" }}
+//        >
+//         <MiniStatistics
+//           startContent={
+//             <IconBox
+//               w='56px'
+//               h='56px'
+//               bg={boxBg}
+//               icon={
+//                 <Icon w='32px' h='32px' as={MdFileCopy} color={brandColor} />
+//               }
+//             />
+//           }
+//           name='Pending Invoices'
+//           value={pendingInvoices}
+//         />
+//         </Box>
+//         <Box 
+//     as={NavLink}
+//     to="/admin/invoices?status=draft"
+//     w="100%"
+//     borderRadius="16px"
+//     border="1px solid"
+//     borderColor="gray.200"
+//     _hover={{ bg: "gray.100", cursor: "pointer" }}
+//        >
+//          <MiniStatistics
+//           startContent={
+//             <IconBox
+//               w='56px'
+//               h='56px'
+//               bg={boxBg}
+//               icon={
+//                 <Icon w='32px' h='32px' as={MdFileCopy} color={brandColor} />
+//               }
+//             />
+//           }
+//           name='Draft Invoices'
+//           value={draftInvoices}
+//         />
+//        </Box>
+       
+//        <Box 
+//     as={NavLink}
+//     to="/admin/invoices?status=rejected"
+//     w="100%"
+//     borderRadius="16px"
+//     border="1px solid"
+//     borderColor="gray.200"
+//     _hover={{ bg: "gray.100", cursor: "pointer" }}
+//        >
+//         <MiniStatistics
+//           startContent={
+//             <IconBox
+//               w='56px'
+//               h='56px'
+//               bg={boxBg}
+//               icon={
+//                 <Icon w='30px' h='30px' as={DeleteIcon} color={brandColor} />
+//               }
+//             />
+//           }
+//           name='Rejected Invoices'
+//           value={rejectedInvoices}
+//         />
+//         </Box>
+
+//       </SimpleGrid>
+//       </Box>
+//     </Box>
+     
+//   );
+// }

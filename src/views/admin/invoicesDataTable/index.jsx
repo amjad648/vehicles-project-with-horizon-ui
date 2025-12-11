@@ -19,12 +19,13 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { getInvoices } from "../../../services/invoiceService";
-import { useKeycloak } from "@react-keycloak/web";
 import { useSearchParams } from "react-router-dom";
+import { KeycloakContext } from "../../../keycloakProvider";
 // Chakra imports
 import { Box } from "@chakra-ui/react";
+
 import ComplexTable from "views/admin/invoicesDataTable/components/ComplexTable";
 import {
   columnsDataComplex,
@@ -32,21 +33,21 @@ import {
 
 export default function Settings() {
   const [invoicesData, setInvoicesData] = useState([]);
-  const { keycloak,initialized } = useKeycloak();
+  // const { keycloak,initialized } = useKeycloak();
+  const keycloak = useContext(KeycloakContext);
   const [searchParams] = useSearchParams();
  
   useEffect( () => {
     // wait until Keycloak finishes loaing
- if (!initialized || !keycloak.authenticated) return;
+ if (!keycloak || !keycloak.authenticated) return;
 
   async function fetchInvoices () {
     const filters = {};
-    const vehicleId = searchParams.get("vehicleId");
     const status = searchParams.get('status');
-
+    const vehicleId = searchParams.get("vehicleId");
+    
     if (vehicleId) filters.vehicleId = vehicleId;
-   
-    console.log(vehicleId);
+     console.log(vehicleId);
   
     // Only add status filter if URL has it
     if (status) filters.statuses = status.toUpperCase();
@@ -56,10 +57,10 @@ export default function Settings() {
 
    fetchInvoices();
     
-    }, [initialized, keycloak.authenticated, searchParams]);
+    }, [keycloak, keycloak.authenticated, searchParams]);
 
     console.log(invoicesData);
-  // Chakra Color Mode
+  
   return (
    <Box pt={{ base: "150px", md: "80px", xl: "80px" }}
     w="100%" 
@@ -77,24 +78,4 @@ export default function Settings() {
   );
 }
 
-
-
-
-
-
-
-
-
-
-
-// export function getInvoicesById (id) {
-//   console.log("Fetching invoices for vehicle ID:", id);
-  
-//   return api.get(`${INVOICES_BASE_ENDPOINT}?vehicleId=${id}`).then(response => response.data.content)
-//   .catch((error) => {
-//  console.error('Error to get invoices data by Id:', error);
-//  return [];
-
-//   });
-// };
 
