@@ -82,6 +82,6 @@ export const columnsDataComplex = [
   },
   {
     Header: "TASKS",
-    accessor: "taskCount",
+    accessor: "tasks",
   },
 ];

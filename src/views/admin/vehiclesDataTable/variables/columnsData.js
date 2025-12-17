@@ -51,8 +51,12 @@ export const columnsDataColumns = [
     accessor: "variant",
   },
   {
-    Header: "VEHICLE ID",
-    accessor: "id",
+    Header: "USER NAME",
+    accessor: "userFullName",
+  },
+  {
+    Header: "EMAIL",
+    accessor: "userEmail",
   },
   {
     Header: "REGISTRATION NO.",

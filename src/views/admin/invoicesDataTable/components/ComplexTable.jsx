@@ -215,8 +215,8 @@ const openInvoiceModal = async (invoiceId) => {
         </Flex>
       ),
     }),
-    columnHelper.accessor('taskCount', {
-      id: 'taskCount',
+    columnHelper.accessor('tasks', {
+      id: 'tasks',
       header: () => (
         <Text
           justifyContent="space-between"

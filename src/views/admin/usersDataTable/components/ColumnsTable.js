@@ -42,8 +42,8 @@ export default function ColumnTable(props) {
   let defaultData = tableData;
   
   const columns = [
-    columnHelper.accessor('make', {
-      id: 'make',
+    columnHelper.accessor('userId', {
+      id: 'userId',
       header: () => (
         <Text
           justifyContent="space-between"
@@ -51,7 +51,7 @@ export default function ColumnTable(props) {
           fontSize={{ sm: '10px', lg: '12px' }}
           color="gray.400"
         >
-          MAKE
+          User Id
         </Text>
       ),
       cell: (info) => (
@@ -62,8 +62,8 @@ export default function ColumnTable(props) {
         </Flex>
       ),
     }),
-    columnHelper.accessor('model', {
-      id: 'model',
+    columnHelper.accessor('fullName', {
+      id: 'fullName',
       header: () => (
         <Text
           justifyContent="space-between"
@@ -71,7 +71,7 @@ export default function ColumnTable(props) {
           fontSize={{ sm: '10px', lg: '12px' }}
           color="gray.400"
         >
-          MODEL
+          NAME
         </Text>
       ),
       cell: (info) => (
@@ -80,62 +80,8 @@ export default function ColumnTable(props) {
         </Text>
       ),
     }),
-    columnHelper.accessor('variant', {
-      id: 'variant',
-      header: () => (
-        <Text
-          justifyContent="space-between"
-          align="center"
-          fontSize={{ sm: '10px', lg: '12px' }}
-          color="gray.400"
-        >
-          VARIANT
-        </Text>
-      ),
-      cell: (info) => (
-        <Text color={textColor} fontSize="sm" fontWeight="700">
-          {info.getValue()}
-        </Text>
-      ),
-    }),
-    columnHelper.accessor('userFullName', {
-      id: 'userFullName',
-      header: () => (
-        <Text
-          justifyContent="space-between"
-          align="center"
-          fontSize={{ sm: '10px', lg: '12px' }}
-          color="gray.400"
-        >
-           OWNER
-        </Text>
-      ),
-      cell: (info) => (
-        <Text color={textColor} fontSize="sm" fontWeight="700">
-          {info.getValue()}
-        </Text>
-      ),
-    }),
-    columnHelper.accessor('registration', {
-      id: 'registration',
-      header: () => (
-        <Text
-          justifyContent="space-between"
-          align="center"
-          fontSize={{ sm: '10px', lg: '12px' }}
-          color="gray.400"
-        >
-          REGISTRATION NO.
-        </Text>
-      ),
-      cell: (info) => (
-        <Text color={textColor} fontSize="sm" fontWeight="700">
-          {info.getValue()}
-        </Text>
-      ),
-    }),
-    columnHelper.accessor('userEmail', {
-      id: 'userEmail',
+    columnHelper.accessor('email', {
+      id: 'email',
       header: () => (
         <Text
           justifyContent="space-between"
@@ -144,6 +90,60 @@ export default function ColumnTable(props) {
           color="gray.400"
         >
           Email
+        </Text>
+      ),
+      cell: (info) => (
+        <Text color={textColor} fontSize="sm" fontWeight="700">
+          {info.getValue()}
+        </Text>
+      ),
+    }),
+    columnHelper.accessor('status', {
+      id: 'status',
+      header: () => (
+        <Text
+          justifyContent="space-between"
+          align="center"
+          fontSize={{ sm: '10px', lg: '12px' }}
+          color="gray.400"
+        >
+           STATUS
+        </Text>
+      ),
+      cell: (info) => (
+        <Text color={textColor} fontSize="sm" fontWeight="700">
+          {info.getValue()}
+        </Text>
+      ),
+    }),
+    columnHelper.accessor('invoiceCount', {
+      id: 'invoiceCount',
+      header: () => (
+        <Text
+          justifyContent="space-between"
+          align="center"
+          fontSize={{ sm: '10px', lg: '12px' }}
+          color="gray.400"
+        >
+          INVOICES
+        </Text>
+      ),
+      cell: (info) => (
+        <Text color={textColor} fontSize="sm" fontWeight="700">
+          {info.getValue()}
+        </Text>
+      ),
+    }),
+    columnHelper.accessor('vehicleCount', {
+      id: 'vehicleCount',
+      header: () => (
+        <Text
+          justifyContent="space-between"
+          align="center"
+          fontSize={{ sm: '10px', lg: '12px' }}
+          color="gray.400"
+        >
+           VEHICLES
         </Text>
       ),
       cell: (info) => (
@@ -166,7 +166,7 @@ export default function ColumnTable(props) {
       ),
       cell: (info) => {
         const row = info.row.original; // full invoice object
-        const id = info.row.original.vehicleId;  // <-- get row id here
+        const id = row.userId;  // <-- get row id here
         return (
           <Flex gap="10px">
             <Button
@@ -189,9 +189,9 @@ export default function ColumnTable(props) {
               size="sm"
               variant="brand"
               as={NavLink}
-              to={`/admin/invoices?vehicleId=${id}`}   // <-- use id here
+              to={`/admin/vehicles-data?userId=${id}`}   // <-- use id here
             >
-              Invoices
+              Vehicles
             </Button>
           </Flex>
         );

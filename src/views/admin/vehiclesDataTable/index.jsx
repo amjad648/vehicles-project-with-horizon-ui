@@ -26,7 +26,7 @@ import { fetchVehicles } from "../../../services/vehicleService";
 import { KeycloakContext } from "../../../keycloakProvider";
 import { Box } from "@chakra-ui/react";
 import ColumnsTable from "./components/ColumnsTable";
-
+import { useSearchParams } from "react-router-dom";
 import {
   columnsDataColumns,
 } from "./variables/columnsData";
@@ -35,20 +35,26 @@ import React from "react";
 export default function Settings() {
   const [vehiclesData, setVehiclesData] = useState([]);
   const keycloak = useContext(KeycloakContext);
+  const [searchParams] = useSearchParams();
 
   useEffect( () => {
     if (!keycloak || !keycloak.authenticated) return;
 
     async function getVehiclesData () {
-     const data = await fetchVehicles();
+    const filters = {};
+    const userId = searchParams.get('userId');
+
+    if(userId) filters.userId = userId;
+
+     const data = await fetchVehicles(filters);
      setVehiclesData( data || [] );
   };
 
    getVehiclesData();
  
-}, []);
+}, [keycloak, keycloak.authenticated, searchParams]);
 
- console.log(vehiclesData);
+ console.log('Vehicles data',vehiclesData);
 
   // Chakra Color Mode
   return (
@@ -68,3 +74,54 @@ export default function Settings() {
     </Box>
   );
 }
+
+
+
+
+// import { useState, useEffect, useContext } from "react";
+// import { fetchVehicles } from "../../../services/vehicleService";
+// import { KeycloakContext } from "../../../keycloakProvider";
+// import { Box } from "@chakra-ui/react";
+// import ColumnsTable from "./components/ColumnsTable";
+
+// import {
+//   columnsDataColumns,
+// } from "./variables/columnsData";
+// import React from "react";
+
+// export default function Settings() {
+//   const [vehiclesData, setVehiclesData] = useState([]);
+//   const keycloak = useContext(KeycloakContext);
+
+//   useEffect( () => {
+//     if (!keycloak || !keycloak.authenticated) return;
+
+//     async function getVehiclesData () {
+//      const data = await fetchVehicles();
+//      setVehiclesData( data || [] );
+//   };
+
+//    getVehiclesData();
+ 
+// }, [keycloak, keycloak.authenticated]);
+
+//  console.log('Vehicles data',vehiclesData);
+
+//   // Chakra Color Mode
+//   return (
+//     <Box pt={{ base: "150px", md: "80px", xl: "80px" }}
+//     w="100%" 
+//     mb='20px'
+//     px="10px"
+//     spacing={{ base: "20px", xl: "20px" }}
+//     >
+      
+       
+//        <ColumnsTable
+//           columnsData={columnsDataColumns}
+//           tableData={vehiclesData}
+//        />
+      
+//     </Box>
+//   );
+// }

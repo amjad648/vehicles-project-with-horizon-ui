@@ -17,6 +17,7 @@ import RTL from 'views/admin/rtl';
 import MiniDashboard from 'views/admin/defaultCopy';
 import VehiclesDataTable from 'views/admin/vehiclesDataTable';
 import InvoicesDataTable from 'views/admin/invoicesDataTable';
+import UsersDataTable from 'views/admin/usersDataTable';
 // Auth Imports
 import SignInCentered from 'views/auth/signIn';
 
@@ -42,7 +43,13 @@ const routes = [
     path: '/invoices',
     component: <InvoicesDataTable />,
   },
-  
+  {
+    name: 'Users',
+    layout: '/admin',
+    path: '/users',
+    icon: <Icon as={MdPerson} width="20px" height="20px" color="inherit" />,
+    component: <UsersDataTable />,
+  },
   {
     name: 'Main Dashboard',
     layout: '/admin',

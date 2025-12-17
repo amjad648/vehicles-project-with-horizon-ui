@@ -146,8 +146,8 @@ export default function InvoiceDetailsModal({
               Labour Tasks
             </Text>
 
-            {invoice.labourTasks?.length > 0 ? (
-              invoice.labourTasks.map((task, idx) => (
+            {invoice.laborTasks?.length > 0 ? (
+              invoice.laborTasks.map((task, idx) => (
                 <Flex
                   key={idx}
                   justify="space-between"

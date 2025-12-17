@@ -19,63 +19,52 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-import React, { useState, useEffect, useContext } from "react";
-import { getInvoices } from "../../../services/invoiceService";
-import { useSearchParams } from "react-router-dom";
-import { KeycloakContext } from "../../../keycloakProvider";
-// Chakra imports
-import { Box } from "@chakra-ui/react";
 
-import ComplexTable from "views/admin/invoicesDataTable/components/ComplexTable";
+// Chakra imports
+import { useState, useEffect, useContext } from "react";
+import { getUsersData } from "../../../services/userServices.js";
+import { KeycloakContext } from "../../../keycloakProvider";
+import { Box } from "@chakra-ui/react";
+import ColumnsTable from "./components/ColumnsTable";
+
 import {
-  columnsDataComplex,
-} from "views/admin/invoicesDataTable/variables/columnsData";
+  columnsDataColumns,
+} from "./variables/columnsData";
+import React from "react";
 
 export default function Settings() {
-  const [invoicesData, setInvoicesData] = useState([]);
-  // const { keycloak,initialized } = useKeycloak();
+  const [usersData, setUsersData] = useState([]);
   const keycloak = useContext(KeycloakContext);
-  const [searchParams] = useSearchParams();
- 
+
   useEffect( () => {
-    // wait until Keycloak finishes loaing
- if (!keycloak || !keycloak.authenticated) return;
+    if (!keycloak || !keycloak.authenticated) return;
 
-  async function fetchInvoices () {
-    const filters = {};
-    const status = searchParams.get('status');
-    const vehicleId = searchParams.get("vehicleId");
-    
-    // Only add status or vehicleId filter if URL has it
-    if (vehicleId) filters.vehicleId = vehicleId;
-    if (status) filters.status = status.toUpperCase();
-   
+    async function fetchUsers () {
+     const data = await getUsersData();
+     setUsersData( data || [] );
+  };
 
-    const data = await getInvoices(filters);
-    setInvoicesData(data || []);
-    };
+   fetchUsers();
+ 
+}, [keycloak, keycloak.authenticated]);
 
-   fetchInvoices();
-    
-    }, [keycloak, keycloak.authenticated, searchParams]);
+ console.log('Users data', usersData);
 
-    console.log('Invoice data',invoicesData);
-  
+  // Chakra Color Mode
   return (
-   <Box pt={{ base: "150px", md: "80px", xl: "80px" }}
+    <Box pt={{ base: "150px", md: "80px", xl: "80px" }}
     w="100%" 
     mb='20px'
     px="10px"
     spacing={{ base: "20px", xl: "20px" }}
     >
+      
        
-        <ComplexTable
-          columnsData={columnsDataComplex}
-          tableData={invoicesData}
-        />
+       <ColumnsTable
+          columnsData={columnsDataColumns}
+          tableData={usersData}
+       />
       
     </Box>
   );
 }
-
-

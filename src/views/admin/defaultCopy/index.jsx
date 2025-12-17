@@ -52,18 +52,21 @@ export default function UserReports() {
   // ⬅️ REPLACE useKeycloak WITH THIS
   const keycloak = useContext(KeycloakContext);
 
-  const [dashboardData, setDashboardData] = useState({});
+  const [dashboardData, setDashboardData] = useState([]);
 
   useEffect(() => {
     if (!keycloak || !keycloak.authenticated) return;
 
     async function loadData() {
       const data = await fetchDashboardAnalytics();
-      setDashboardData(data || {});
+      setDashboardData(data || []);
     }
 
     loadData();
-  }, [keycloak?.authenticated]);
+
+  }, [keycloak, keycloak.authenticated]);
+
+  console.log('Dashboard data',dashboardData);
 
   const approvedInvoices = dashboardData?.invoiceCountsByStatus?.APPROVED || 0;
   const pendingInvoices = dashboardData?.invoiceCountsByStatus?.PENDING || 0;
@@ -98,7 +101,16 @@ export default function UserReports() {
           />
         </Box>
 
-        <MiniStatistics
+        <Box
+          as={NavLink}
+          to="/admin/users"
+          w="100%"
+          borderRadius="16px"
+          border="1px solid"
+          borderColor="gray.200"
+          _hover={{ bg: "gray.100", cursor: "pointer" }}
+        >
+         <MiniStatistics
           startContent={
             <IconBox
               w="56px"
@@ -111,7 +123,8 @@ export default function UserReports() {
           }
           name="Total Users"
           value={dashboardData.totalUsers}
-        />
+         />
+        </Box>
 
         <Box
           as={NavLink}
@@ -219,6 +232,7 @@ export default function UserReports() {
           </Box>
 
           {/* REJECTED */}
+
           <Box
             as={NavLink}
             to="/admin/invoices?status=rejected"

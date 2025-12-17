@@ -1,6 +1,6 @@
 import api from '../common/axiosInstance';
  
-const INVOICES_BASE_ENDPOINT = '/invoices';
+const INVOICES_BASE_ENDPOINT = '/backoffice/invoices';
 
 export function getInvoices (filters) {
   const params = new URLSearchParams(filters).toString();
@@ -10,6 +10,7 @@ export function getInvoices (filters) {
     .then(res => res.data.content)
     .catch(err => {
       console.error('Error to get invoices:', err);
+      
       return [];
     });
 };
