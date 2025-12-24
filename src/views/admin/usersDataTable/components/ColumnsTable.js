@@ -42,26 +42,26 @@ export default function ColumnTable(props) {
   let defaultData = tableData;
   
   const columns = [
-    columnHelper.accessor('userId', {
-      id: 'userId',
-      header: () => (
-        <Text
-          justifyContent="space-between"
-          align="center"
-          fontSize={{ sm: '10px', lg: '12px' }}
-          color="gray.400"
-        >
-          User Id
-        </Text>
-      ),
-      cell: (info) => (
-        <Flex align="center">
-          <Text color={textColor} fontSize="sm" fontWeight="700">
-            {info.getValue()}
-          </Text>
-        </Flex>
-      ),
-    }),
+    // columnHelper.accessor('userId', {
+    //   id: 'userId',
+    //   header: () => (
+    //     <Text
+    //       justifyContent="space-between"
+    //       align="center"
+    //       fontSize={{ sm: '10px', lg: '12px' }}
+    //       color="gray.400"
+    //     >
+    //       User Id
+    //     </Text>
+    //   ),
+    //   cell: (info) => (
+    //     <Flex align="center">
+    //       <Text color={textColor} fontSize="sm" fontWeight="700">
+    //         {info.getValue()}
+    //       </Text>
+    //     </Flex>
+    //   ),
+    // }),
     columnHelper.accessor('fullName', {
       id: 'fullName',
       header: () => (

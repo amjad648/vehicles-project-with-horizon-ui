@@ -57,16 +57,15 @@ export default function InvoiceDetailsModal({
         boxShadow="sm"
         >
         <Flex justify="space-between" align="center">
-          <Box>
+          {/* <Box>
           {console.log(invoice)}
             <Text fontSize="lg" fontWeight="700" color="gray.700">
               Invoice ID
             </Text>
             <Text color="gray.600">{invoice.invoiceId}</Text>
-          </Box>
-
-          <Box textAlign="right">
-            <Text fontSize="lg" fontWeight="700" color="gray.700">
+          </Box> */}
+          <Box>
+            <Text fontSize="lg" fontWeight="600" color="gray.700">
               Status
             </Text>
             <Badge
@@ -77,62 +76,80 @@ export default function InvoiceDetailsModal({
                   ? "red"
                   : "orange"
               }
-              px="3"
-              py="1"
+              
               borderRadius="md"
-              fontSize="md"
+              fontSize="sm"
             >
               {invoice.status}
             </Badge>
           </Box>
-        </Flex>
 
-        <Divider my="4" />
-
-        <Flex justify="space-between">
-          <Box>
-            <Text fontWeight="600" color="gray.700">
+           <Box>
+           {console.log(invoice)}
+            <Text fontSize="lg" fontWeight="600" color="gray.700">
               Service Date
             </Text>
             <Text color="gray.600">{invoice.serviceDate}</Text>
           </Box>
 
-          <Box textAlign="right">
-            <Text fontWeight="600" color="gray.700">
+
+          <Box>
+            <Text fontSize="lg" fontWeight="600" color="gray.700">
               Total Cost
             </Text>
-            <Text fontSize="2xl" color="blue.600" fontWeight="700">
+            <Text fontSize="xl" color="blue.600" fontWeight="700">
               Rs. {invoice.totalCost}
             </Text>
           </Box>
         </Flex>
+
+        {/* <Divider my="4" /> */}
+
+      
       </Box>
 
       {/* =======================================================
           SECTION 2: VEHICLE INFORMATION
       ======================================================== */}
-      <Box>
+    
         <Text fontSize="xl" fontWeight="600" mb="3" color="gray.800">
           Vehicle Information
         </Text>
 
-        <SimpleGrid columns={2} spacing="6">
-          <Box>
-            <Text fontWeight="600">Vehicle Name:</Text>
-            <Text color="gray.600">{invoice.vehicleDisplayName}</Text>
+        {/* <SimpleGrid  spacing="6"> */}
+        <Box
+          p="5"
+          bg="gray.50"
+          borderRadius="lg"
+          border="1px solid"
+          borderColor="gray.200"
+          boxShadow="sm"
+          >
+        <Flex justify="space-between" align="center">
+
+            <Box>
+            <Text fontSize="lg" fontWeight="600" color="gray.700">Vehicle Name</Text>
+            <Text color="gray.600">{invoice?.vehicleDisplayName ?? "N/A"}</Text>
+            </Box>
+            
+            <Box textAlign="right">
+            <Text fontSize="lg" fontWeight="600" color="gray.700">
+              Odometer Reading
+            </Text>
+            <Text color="gray.600">
+            {invoice.richInvoiceData?.vehicleInfo?.odometer ?? "N/A"} km
+            </Text>
           </Box>
 
-          <Box>
-            <Text fontWeight="600">Vehicle ID:</Text>
-            <Text color="gray.600">{invoice.vehicleId}</Text>
-          </Box>
-        </SimpleGrid>
-      </Box>
+        </Flex>
+
+        </Box>
+    
 
       <Divider />
 
       {/* =======================================================
-          SECTION 3: TASKS BREAKDOWN (MODERN DESIGN)
+          SECTION 3: TASKS BREAKDOWN 
       ======================================================== */}
       <Box>
         <Text fontSize="xl" fontWeight="600" mb="3" color="gray.800">
